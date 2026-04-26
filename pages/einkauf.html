@@ -6,26 +6,33 @@
 <title>Einkaufsliste</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
-.shop-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
-.shop-row:hover{background:rgba(255,255,255,.02);}
+.shop-row{display:grid;grid-template-columns:24px 1fr 90px 80px;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);align-items:center;}
 .shop-row:last-child{border-bottom:none;}
-.shop-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface);}
+.shop-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface);cursor:pointer;}
 .shop-row.done .shop-check{background:var(--lime);border-color:var(--lime);}
 .shop-row.done .shop-check::after{content:'✓';color:#000;font-weight:700;font-size:13px;}
 .shop-row.done .shop-name{text-decoration:line-through;color:var(--muted);}
-.shop-name{flex:1;font-size:13.5px;}
-.shop-amt{font-size:12px;color:var(--muted);}
-.shop-price{font-size:12px;font-weight:500;color:var(--lime);min-width:55px;text-align:right;}
+.shop-name{font-size:13.5px;cursor:pointer;}
+.shop-amt{font-size:11.5px;color:var(--muted);}
+.price-input{width:75px;background:var(--surface2);border:1px solid var(--border2);color:var(--lime);padding:5px 7px;border-radius:5px;font-family:inherit;font-size:12.5px;text-align:right;font-weight:500;}
+.price-input:focus{outline:none;border-color:var(--lime);}
 .budget-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:24px;}
 .b-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
 .b-card .stat-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
 .b-card .stat-val{font-family:'Syne';font-weight:700;font-size:1.3rem;display:block;margin-top:4px;}
 .b-card.green .stat-val{color:var(--lime);}
 .b-card.amber .stat-val{color:var(--amber);}
+.b-card.coral .stat-val{color:var(--coral);}
 .tab-bar{flex-wrap:wrap;}
 .total-row{margin-top:14px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;display:flex;justify-content:space-between;align-items:center;}
 .total-row .total-lbl{font-family:'Syne';font-weight:700;font-size:1rem;}
 .total-row .total-val{font-family:'Syne';font-weight:700;font-size:1.3rem;color:var(--lime);}
+.card-head .card-sub{font-family:'Syne';font-weight:600;}
+.note-tag{display:inline-block;font-size:10px;background:rgba(245,191,62,0.1);color:var(--amber);border:1px solid rgba(245,191,62,0.25);padding:1px 7px;border-radius:10px;margin-left:6px;font-weight:500;}
+@media(max-width:520px){
+  .shop-row{grid-template-columns:24px 1fr 75px;}
+  .shop-amt{display:none;}
+}
 </style>
 </head>
 <body>
@@ -34,7 +41,7 @@
 <div class="page-hero">
   <span class="page-hero-tag">200 € Monatsbudget · 50 € Mensa-Joker</span>
   <h1>Einkaufs<span>liste</span></h1>
-  <p>1× Großeinkauf am Monatsanfang + 4× kleine Wocheneinkäufe für Frisches.</p>
+  <p>Preise selbst eintragen – die Summe wird automatisch berechnet. Werte werden im Browser gespeichert.</p>
 </div>
  
 <div class="content">
@@ -43,153 +50,290 @@
  
   <div class="budget-box">
     <div class="b-card green"><div class="stat-lbl">Monatsbudget</div><span class="stat-val">200 €</span></div>
-    <div class="b-card"><div class="stat-lbl">Großeinkauf</div><span class="stat-val">~155 €</span></div>
-    <div class="b-card"><div class="stat-lbl">Wocheneinkauf</div><span class="stat-val">~11 €</span></div>
-    <div class="b-card amber"><div class="stat-lbl">Mensa-Joker</div><span class="stat-val">50 €</span></div>
+    <div class="b-card"><div class="stat-lbl">Großeinkauf</div><span class="stat-val" id="sumMonth">0 €</span></div>
+    <div class="b-card"><div class="stat-lbl">Wocheneinkauf</div><span class="stat-val" id="sumWeek">0 €</span></div>
+    <div class="b-card amber" id="totalCard"><div class="stat-lbl">Gesamt geschätzt</div><span class="stat-val" id="sumTotal">0 €</span></div>
   </div>
  
-  <div class="alert alert-info"><strong>Strategie:</strong> Hähnchen (15 kg) und Hack (7 kg) am 1. portionieren und einfrieren. Reis, Pasta, Öl, Nüsse halten ewig. Wöchentlich nur frisches Gemüse, Obst und Brot nachkaufen. Spart Zeit, Geld und Stress.</div>
+  <div class="alert alert-info"><strong>So rechnet's:</strong> Großeinkauf + (Wocheneinkauf × 4). Hähnchen, Hack & Reis halten 2–3 Monate – also nicht jeden Monat alles neu kaufen!</div>
  
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="month">📦 Großeinkauf · 1×</button>
+    <button class="tab-btn active" data-tab="month">📦 Großeinkauf</button>
     <button class="tab-btn" data-tab="weekly">🛒 Wöchentlich</button>
     <button class="tab-btn" data-tab="mensa">🎓 Mensa-Joker</button>
   </div>
  
   <!-- GROSSEINKAUF -->
   <div class="tab-pane active" id="month">
-    <div class="alert alert-info"><strong>Am 1. des Monats:</strong> Hähnchen + Hack direkt zu Hause portionieren (Beutel à 200–300 g) und einfrieren. Hält 3+ Monate problemlos.</div>
+    <div class="alert alert-warn"><strong>Wichtig – nicht jeden Monat:</strong> 15 kg Hähnchen halten ca. 3 Monate, 7 kg Hack ca. 2 Monate, 5 kg Reis ca. 2–3 Monate. Beim Eintragen nur ankreuzen + Preis setzen, was du in <em>diesem</em> Monat wirklich kaufst.</div>
  
     <div class="grid-2">
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Fleisch · einfrieren</span><span class="card-sub">~103 €</span></div>
-        <div class="shop-row" data-id="m1"><div class="shop-check"></div><div class="shop-name">Hähnchenbrust</div><div class="shop-amt">15 kg</div><div class="shop-price">75 €</div></div>
-        <div class="shop-row" data-id="m2"><div class="shop-check"></div><div class="shop-name">Hackfleisch (Rind)</div><div class="shop-amt">7 kg</div><div class="shop-price">28 €</div></div>
+        <div class="card-head"><span class="card-label">Fleisch · einfrieren</span><span class="card-sub" data-sum="meat">0 €</span></div>
+        <div class="shop-row" data-cat="month" data-sumgrp="meat" data-id="m1">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Hähnchenbrust <span class="note-tag">~3 Monate</span></div><div class="shop-amt">15 kg</div></div>
+          <div class="shop-amt">15 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="75,00" data-default="75">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="meat" data-id="m2">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Hackfleisch (Rind) <span class="note-tag">~2 Monate</span></div><div class="shop-amt">7 kg</div></div>
+          <div class="shop-amt">7 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="28,00" data-default="28">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Grundnahrung</span><span class="card-sub">~24 €</span></div>
-        <div class="shop-row" data-id="m3"><div class="shop-check"></div><div class="shop-name">Basmati-Reis (afghan. Supermarkt)</div><div class="shop-amt">5 kg</div><div class="shop-price">14 €</div></div>
-        <div class="shop-row" data-id="m4"><div class="shop-check"></div><div class="shop-name">Pasta</div><div class="shop-amt">2 kg</div><div class="shop-price">3 €</div></div>
-        <div class="shop-row" data-id="m5"><div class="shop-check"></div><div class="shop-name">Bulgur</div><div class="shop-amt">1 kg</div><div class="shop-price">3 €</div></div>
-        <div class="shop-row" data-id="m6"><div class="shop-check"></div><div class="shop-name">Linsen</div><div class="shop-amt">1 kg</div><div class="shop-price">2 €</div></div>
-        <div class="shop-row" data-id="m7"><div class="shop-check"></div><div class="shop-name">Kichererbsen (Dose)</div><div class="shop-amt">3 Dosen</div><div class="shop-price">2 €</div></div>
+        <div class="card-head"><span class="card-label">Grundnahrung</span><span class="card-sub" data-sum="basics">0 €</span></div>
+        <div class="shop-row" data-cat="month" data-sumgrp="basics" data-id="m3">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Basmati-Reis <span class="note-tag">~2–3 Monate</span></div><div class="shop-amt">5 kg · afghan. Supermarkt</div></div>
+          <div class="shop-amt">5 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="14,00" data-default="14">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="basics" data-id="m4">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Pasta</div><div class="shop-amt">2 kg</div></div>
+          <div class="shop-amt">2 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="3,00" data-default="3">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="basics" data-id="m5">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Bulgur</div><div class="shop-amt">1 kg</div></div>
+          <div class="shop-amt">1 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="3,00" data-default="3">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="basics" data-id="m6">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Linsen</div><div class="shop-amt">1 kg</div></div>
+          <div class="shop-amt">1 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="2,00" data-default="2">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="basics" data-id="m7">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Kichererbsen (Dose)</div><div class="shop-amt">3 Dosen</div></div>
+          <div class="shop-amt">3 Dosen</div>
+          <input type="number" step="0.01" class="price-input" placeholder="2,00" data-default="2">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Protein-Basis</span><span class="card-sub">~46 €</span></div>
-        <div class="shop-row" data-id="m8"><div class="shop-check"></div><div class="shop-name">Eier (2× 18er)</div><div class="shop-amt">36 Stück</div><div class="shop-price">8,40 €</div></div>
-        <div class="shop-row" data-id="m9"><div class="shop-check"></div><div class="shop-name">Thunfisch (Dose)</div><div class="shop-amt">6 Dosen</div><div class="shop-price">7,74 €</div></div>
-        <div class="shop-row" data-id="m10"><div class="shop-check"></div><div class="shop-name">Whey Protein DM (2 Stück)</div><div class="shop-amt">2 kg</div><div class="shop-price">30 €</div></div>
+        <div class="card-head"><span class="card-label">Protein-Basis</span><span class="card-sub" data-sum="protein">0 €</span></div>
+        <div class="shop-row" data-cat="month" data-sumgrp="protein" data-id="m8">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Eier (2× 18er)</div><div class="shop-amt">36 Stück · 4,20 € pro 18er</div></div>
+          <div class="shop-amt">36 St.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="8,40" data-default="8.40">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="protein" data-id="m9">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Thunfisch (Dose)</div><div class="shop-amt">6 Dosen · 1,29 € pro Stück</div></div>
+          <div class="shop-amt">6 Dosen</div>
+          <input type="number" step="0.01" class="price-input" placeholder="7,74" data-default="7.74">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="protein" data-id="m10">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Whey Protein DM (2 Stück)</div><div class="shop-amt">2 kg · 15 € pro Pack</div></div>
+          <div class="shop-amt">2 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="30,00" data-default="30">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Fette & Nüsse · halten ewig</span><span class="card-sub">~26 €</span></div>
-        <div class="shop-row" data-id="m11"><div class="shop-check"></div><div class="shop-name">Olivenöl</div><div class="shop-amt">1 L</div><div class="shop-price">8 €</div></div>
-        <div class="shop-row" data-id="m12"><div class="shop-check"></div><div class="shop-name">Erdnussbutter</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
-        <div class="shop-row" data-id="m13"><div class="shop-check"></div><div class="shop-name">Mandeln</div><div class="shop-amt">500 g</div><div class="shop-price">7 €</div></div>
-        <div class="shop-row" data-id="m14"><div class="shop-check"></div><div class="shop-name">Walnüsse</div><div class="shop-amt">300 g</div><div class="shop-price">6 €</div></div>
+        <div class="card-head"><span class="card-label">Fette & Nüsse <span class="note-tag">halten ewig</span></span><span class="card-sub" data-sum="fats">0 €</span></div>
+        <div class="shop-row" data-cat="month" data-sumgrp="fats" data-id="m11">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Olivenöl</div><div class="shop-amt">1 L</div></div>
+          <div class="shop-amt">1 L</div>
+          <input type="number" step="0.01" class="price-input" placeholder="8,00" data-default="8">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="fats" data-id="m12">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Erdnussbutter</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="5,00" data-default="5">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="fats" data-id="m13">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Mandeln</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="7,00" data-default="7">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="fats" data-id="m14">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Walnüsse</div><div class="shop-amt">300 g</div></div>
+          <div class="shop-amt">300 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="6,00" data-default="6">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Süßes & Trockenes</span><span class="card-sub">~10 €</span></div>
-        <div class="shop-row" data-id="m15"><div class="shop-check"></div><div class="shop-name">Honig</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
-        <div class="shop-row" data-id="m16"><div class="shop-check"></div><div class="shop-name">Datteln</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
+        <div class="card-head"><span class="card-label">Süßes & Frühstück</span><span class="card-sub" data-sum="sweet">0 €</span></div>
+        <div class="shop-row" data-cat="month" data-sumgrp="sweet" data-id="m15">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Honig</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="5,00" data-default="5">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="sweet" data-id="m16">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Datteln</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="5,00" data-default="5">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="sweet" data-id="m17">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Haferflocken</div><div class="shop-amt">2 kg</div></div>
+          <div class="shop-amt">2 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="4,00" data-default="4">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Frühstück</span><span class="card-sub">~4 €</span></div>
-        <div class="shop-row" data-id="m17"><div class="shop-check"></div><div class="shop-name">Haferflocken</div><div class="shop-amt">2 kg</div><div class="shop-price">4 €</div></div>
-      </div>
- 
-      <div class="card">
-        <div class="card-head"><span class="card-label">Gewürze · alle 2–3 Mo</span><span class="card-sub">nur bei Bedarf</span></div>
-        <div class="shop-row" data-id="m18"><div class="shop-check"></div><div class="shop-name">Safran</div><div class="shop-amt">1 g</div><div class="shop-price">5 €</div></div>
-        <div class="shop-row" data-id="m19"><div class="shop-check"></div><div class="shop-name">Sumach + Kurkuma + Kreuzkümmel</div><div class="shop-amt">je 50–100 g</div><div class="shop-price">6 €</div></div>
-        <div class="shop-row" data-id="m20"><div class="shop-check"></div><div class="shop-name">Salz, Pfeffer, Paprika</div><div class="shop-amt">divers</div><div class="shop-price">3 €</div></div>
-        <div style="padding:10px 16px;font-size:11.5px;color:var(--muted);background:var(--surface2);">Hinweis: Nur kaufen wenn leer. Sonst überspringen, spart pro Monat ~5–10 €.</div>
+        <div class="card-head"><span class="card-label">Gewürze <span class="note-tag">alle 2–3 Mo</span></span><span class="card-sub" data-sum="spices">0 €</span></div>
+        <div class="shop-row" data-cat="month" data-sumgrp="spices" data-id="m18">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Safran</div><div class="shop-amt">1 g</div></div>
+          <div class="shop-amt">1 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="5,00" data-default="5">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="spices" data-id="m19">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Sumach + Kurkuma + Kreuzkümmel</div><div class="shop-amt">je 50–100 g</div></div>
+          <div class="shop-amt">div.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="6,00" data-default="6">
+        </div>
+        <div class="shop-row" data-cat="month" data-sumgrp="spices" data-id="m20">
+          <div class="shop-check"></div>
+          <div><div class="shop-name">Salz, Pfeffer, Paprika</div><div class="shop-amt">divers</div></div>
+          <div class="shop-amt">div.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="3,00" data-default="3">
+        </div>
       </div>
  
     </div>
  
     <div class="total-row">
-      <span class="total-lbl">Großeinkauf gesamt</span>
-      <span class="total-val">~155 €</span>
+      <span class="total-lbl">Großeinkauf · nur angekreuzte Items</span>
+      <span class="total-val" id="totalMonth">0 €</span>
     </div>
   </div>
  
   <!-- WÖCHENTLICH -->
   <div class="tab-pane" id="weekly">
-    <div class="alert alert-info"><strong>Jeden Sonntag:</strong> Frisches für die kommende Woche – passt perfekt zum Meal Prep. Dieselbe Liste jede Woche, du kennst sie irgendwann auswendig.</div>
+    <div class="alert alert-info"><strong>Jeden Sonntag:</strong> Frisches für die kommende Woche – passt zum Meal Prep. Häkchen + Preise gelten als Standard für jede Woche.</div>
  
     <div class="grid-2">
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Frisches Gemüse</span><span class="card-sub">~5 €</span></div>
-        <div class="shop-row" data-id="w1"><div class="shop-check"></div><div class="shop-name">Tomaten</div><div class="shop-amt">500 g</div><div class="shop-price">1,50 €</div></div>
-        <div class="shop-row" data-id="w2"><div class="shop-check"></div><div class="shop-name">Gurke</div><div class="shop-amt">1 Stück</div><div class="shop-price">0,80 €</div></div>
-        <div class="shop-row" data-id="w3"><div class="shop-check"></div><div class="shop-name">Zwiebeln</div><div class="shop-amt">500 g</div><div class="shop-price">0,70 €</div></div>
-        <div class="shop-row" data-id="w4"><div class="shop-check"></div><div class="shop-name">Knoblauch</div><div class="shop-amt">1 Knolle</div><div class="shop-price">0,50 €</div></div>
-        <div class="shop-row" data-id="w5"><div class="shop-check"></div><div class="shop-name">Salat / Spinat</div><div class="shop-amt">1 Stück</div><div class="shop-price">1,50 €</div></div>
+        <div class="card-head"><span class="card-label">Frisches Gemüse</span><span class="card-sub" data-sum="veg">0 €</span></div>
+        <div class="shop-row" data-cat="week" data-sumgrp="veg" data-id="w1">
+          <div class="shop-check"></div><div><div class="shop-name">Tomaten</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="1,50" data-default="1.50">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="veg" data-id="w2">
+          <div class="shop-check"></div><div><div class="shop-name">Gurke</div><div class="shop-amt">1 Stück</div></div>
+          <div class="shop-amt">1 St.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="0,80" data-default="0.80">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="veg" data-id="w3">
+          <div class="shop-check"></div><div><div class="shop-name">Zwiebeln</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="0,70" data-default="0.70">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="veg" data-id="w4">
+          <div class="shop-check"></div><div><div class="shop-name">Knoblauch</div><div class="shop-amt">1 Knolle</div></div>
+          <div class="shop-amt">1 Kn.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="0,50" data-default="0.50">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="veg" data-id="w5">
+          <div class="shop-check"></div><div><div class="shop-name">Salat / Spinat</div><div class="shop-amt">1 Stück</div></div>
+          <div class="shop-amt">1 St.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="1,50" data-default="1.50">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Obst</span><span class="card-sub">~3 €</span></div>
-        <div class="shop-row" data-id="w6"><div class="shop-check"></div><div class="shop-name">Bananen</div><div class="shop-amt">1 kg</div><div class="shop-price">1,50 €</div></div>
-        <div class="shop-row" data-id="w7"><div class="shop-check"></div><div class="shop-name">Äpfel</div><div class="shop-amt">500 g</div><div class="shop-price">1,20 €</div></div>
-        <div class="shop-row" data-id="w8"><div class="shop-check"></div><div class="shop-name">Zitrone</div><div class="shop-amt">1 Stück</div><div class="shop-price">0,40 €</div></div>
+        <div class="card-head"><span class="card-label">Obst</span><span class="card-sub" data-sum="fruit">0 €</span></div>
+        <div class="shop-row" data-cat="week" data-sumgrp="fruit" data-id="w6">
+          <div class="shop-check"></div><div><div class="shop-name">Bananen</div><div class="shop-amt">1 kg</div></div>
+          <div class="shop-amt">1 kg</div>
+          <input type="number" step="0.01" class="price-input" placeholder="1,50" data-default="1.50">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="fruit" data-id="w7">
+          <div class="shop-check"></div><div><div class="shop-name">Äpfel</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="1,20" data-default="1.20">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="fruit" data-id="w8">
+          <div class="shop-check"></div><div><div class="shop-name">Zitrone</div><div class="shop-amt">1 Stück</div></div>
+          <div class="shop-amt">1 St.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="0,40" data-default="0.40">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Milchprodukte</span><span class="card-sub">~3 €</span></div>
-        <div class="shop-row" data-id="w9"><div class="shop-check"></div><div class="shop-name">Skyr / Magerquark</div><div class="shop-amt">500 g</div><div class="shop-price">2,00 €</div></div>
-        <div class="shop-row" data-id="w10"><div class="shop-check"></div><div class="shop-name">Hafermilch</div><div class="shop-amt">1 L</div><div class="shop-price">1,30 €</div></div>
+        <div class="card-head"><span class="card-label">Milchprodukte</span><span class="card-sub" data-sum="dairy">0 €</span></div>
+        <div class="shop-row" data-cat="week" data-sumgrp="dairy" data-id="w9">
+          <div class="shop-check"></div><div><div class="shop-name">Skyr / Magerquark</div><div class="shop-amt">500 g</div></div>
+          <div class="shop-amt">500 g</div>
+          <input type="number" step="0.01" class="price-input" placeholder="2,00" data-default="2">
+        </div>
+        <div class="shop-row" data-cat="week" data-sumgrp="dairy" data-id="w10">
+          <div class="shop-check"></div><div><div class="shop-name">Hafermilch</div><div class="shop-amt">1 L</div></div>
+          <div class="shop-amt">1 L</div>
+          <input type="number" step="0.01" class="price-input" placeholder="1,30" data-default="1.30">
+        </div>
       </div>
  
       <div class="card">
-        <div class="card-head"><span class="card-label">Brot</span><span class="card-sub">~2 €</span></div>
-        <div class="shop-row" data-id="w11"><div class="shop-check"></div><div class="shop-name">Vollkornbrot / Fladenbrot</div><div class="shop-amt">1 Stück</div><div class="shop-price">2,00 €</div></div>
+        <div class="card-head"><span class="card-label">Brot</span><span class="card-sub" data-sum="bread">0 €</span></div>
+        <div class="shop-row" data-cat="week" data-sumgrp="bread" data-id="w11">
+          <div class="shop-check"></div><div><div class="shop-name">Vollkornbrot / Fladenbrot</div><div class="shop-amt">1 Stück</div></div>
+          <div class="shop-amt">1 St.</div>
+          <input type="number" step="0.01" class="price-input" placeholder="2,00" data-default="2">
+        </div>
       </div>
  
     </div>
  
     <div class="total-row">
-      <span class="total-lbl">Wocheneinkauf · ca.</span>
-      <span class="total-val">~11 €</span>
+      <span class="total-lbl">Wocheneinkauf · 1 Woche</span>
+      <span class="total-val" id="totalWeek">0 €</span>
     </div>
-    <div style="margin-top:8px;text-align:right;font-size:12px;color:var(--muted);">× 4 Wochen = ~45 € pro Monat für Frisches</div>
- 
-    <div class="alert alert-info" style="margin-top:18px;"><strong>Variation:</strong> Tausch ab und zu Salat gegen Brokkoli oder Spinat (TK), Äpfel gegen Beeren, Skyr gegen Joghurt. Bleibt im Budget.</div>
+    <div style="margin-top:8px;text-align:right;font-size:12px;color:var(--muted);">× 4 Wochen = <span id="totalWeekMonth" style="color:var(--lime);">0 €</span> pro Monat</div>
   </div>
  
   <!-- MENSA -->
   <div class="tab-pane" id="mensa">
-    <div class="alert alert-info"><strong>Mensa-Joker:</strong> 50 € pro Monat auf die Mensakarte laden. Reicht für ca. 12–15 Mahlzeiten an Uni-Tagen (Mo, Di, Mi, Do).</div>
- 
+    <div class="alert alert-info"><strong>Mensa-Joker:</strong> 50 € pro Monat auf die Mensakarte. Reicht für ca. 12–15 Mahlzeiten.</div>
     <div class="card">
       <div class="card-head"><span class="card-label">Mensa-Strategie</span><span class="card-sub">50 € / Monat</span></div>
-      <div style="padding:16px 18px;font-size:13.5px;line-height:1.7;color:var(--text);">
+      <div style="padding:16px 18px;font-size:13.5px;line-height:1.7;">
         <strong style="color:var(--lime);">Was sich lohnt:</strong>
-        <ul style="margin:8px 0 16px 18px;color:var(--muted);">
-          <li>Hauptgerichte mit Hähnchen oder Fisch (~3–4 €)</li>
+        <ul style="margin:6px 0 14px 18px;color:var(--muted);">
+          <li>Hauptgericht mit Hähnchen oder Fisch (~3–4 €)</li>
           <li>Reis, Nudeln, Gemüse als Beilage</li>
           <li>Salatbar wenn vorhanden</li>
         </ul>
-        <strong style="color:var(--amber);">Was du selbst mitbringst:</strong>
-        <ul style="margin:8px 0 16px 18px;color:var(--muted);">
+        <strong style="color:var(--amber);">Selbst mitbringen:</strong>
+        <ul style="margin:6px 0 14px 18px;color:var(--muted);">
           <li>Snacks (Banane, Mandeln, Datteln)</li>
-          <li>Skyr-Becher mit Honig für zwischendurch</li>
-          <li>Eigenes Wasser / Tee statt Getränke kaufen</li>
+          <li>Skyr-Becher mit Honig</li>
+          <li>Eigenes Wasser / Tee</li>
         </ul>
         <strong style="color:var(--lime);">Spar-Tipp:</strong>
-        <div style="margin-top:6px;color:var(--muted);">An langen Uni-Tagen Mensa nutzen (1× warm essen), an kurzen Tagen Meal-Prep-Box mitbringen.</div>
+        <div style="margin-top:6px;color:var(--muted);">Lange Uni-Tage = Mensa, kurze Tage = Meal-Prep-Box mitbringen.</div>
       </div>
     </div>
   </div>
  
-  <div style="margin-top:24px;text-align:center;">
-    <button onclick="resetShop()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:8px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Häkchen zurücksetzen</button>
+  <div style="margin-top:24px;text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <button onclick="resetCheck()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:8px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Häkchen zurücksetzen</button>
+    <button onclick="loadDefaults()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:8px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Standardpreise laden</button>
   </div>
 </section>
  
@@ -200,26 +344,95 @@
 <script>
 injectNav();injectFooter();initFadeIn();initTabs('.tab-bar','.tab-pane');
  
-const SHOP_KEY='jawad_shop_v2';
-function loadShop(){try{return JSON.parse(localStorage.getItem(SHOP_KEY))||{}}catch{return{}}}
-function saveShop(s){localStorage.setItem(SHOP_KEY,JSON.stringify(s));}
+const SHOP_KEY='jawad_shop_v3';
+function load(){try{return JSON.parse(localStorage.getItem(SHOP_KEY))||{}}catch{return{}}}
+function save(s){localStorage.setItem(SHOP_KEY,JSON.stringify(s));}
  
-const state = loadShop();
-document.querySelectorAll('.shop-row').forEach(row=>{
+const state = load();
+const rows = document.querySelectorAll('.shop-row');
+ 
+// Init
+rows.forEach(row=>{
   const id = row.dataset.id;
-  if(state[id]) row.classList.add('done');
-  row.addEventListener('click',()=>{
+  const input = row.querySelector('.price-input');
+  if(state[id]){
+    if(state[id].checked) row.classList.add('done');
+    if(state[id].price!=null) input.value = state[id].price;
+  }
+ 
+  const check = row.querySelector('.shop-check');
+  const name = row.querySelector('.shop-name');
+  [check,name].forEach(el=>el.addEventListener('click',()=>{
     row.classList.toggle('done');
-    state[id] = row.classList.contains('done');
-    saveShop(state);
+    state[id] = state[id]||{};
+    state[id].checked = row.classList.contains('done');
+    save(state);
+    recalc();
+  }));
+ 
+  input.addEventListener('input',()=>{
+    state[id] = state[id]||{};
+    state[id].price = input.value;
+    save(state);
+    recalc();
   });
 });
  
-function resetShop(){
-  if(!confirm('Wirklich alle Häkchen entfernen?')) return;
-  localStorage.removeItem(SHOP_KEY);
-  document.querySelectorAll('.shop-row').forEach(r=>r.classList.remove('done'));
+function fmt(n){return n.toFixed(2).replace('.',',') + ' €';}
+ 
+function recalc(){
+  const grpSums = {};
+  let monthSum=0, weekSum=0;
+  rows.forEach(row=>{
+    if(!row.classList.contains('done')) return;
+    const input = row.querySelector('.price-input');
+    const v = parseFloat(input.value)||0;
+    if(!v) return;
+    const grp = row.dataset.sumgrp;
+    grpSums[grp] = (grpSums[grp]||0) + v;
+    if(row.dataset.cat==='month') monthSum+=v;
+    else weekSum+=v;
+  });
+ 
+  document.querySelectorAll('[data-sum]').forEach(el=>{
+    const g = el.dataset.sum;
+    el.textContent = fmt(grpSums[g]||0);
+  });
+ 
+  document.getElementById('totalMonth').textContent = fmt(monthSum);
+  document.getElementById('totalWeek').textContent = fmt(weekSum);
+  document.getElementById('totalWeekMonth').textContent = fmt(weekSum*4);
+  document.getElementById('sumMonth').textContent = fmt(monthSum);
+  document.getElementById('sumWeek').textContent = fmt(weekSum);
+ 
+  const total = monthSum + weekSum*4;
+  document.getElementById('sumTotal').textContent = fmt(total);
+ 
+  // Color hint
+  const card = document.getElementById('totalCard');
+  card.classList.remove('green','amber','coral');
+  if(total<=200) card.classList.add('green');
+  else if(total<=220) card.classList.add('amber');
+  else card.classList.add('coral');
 }
+ 
+function resetCheck(){
+  if(!confirm('Alle Häkchen entfernen?')) return;
+  rows.forEach(r=>{r.classList.remove('done');const id=r.dataset.id;if(state[id])state[id].checked=false;});
+  save(state); recalc();
+}
+ 
+function loadDefaults(){
+  if(!confirm('Standardpreise in alle Felder einsetzen?')) return;
+  rows.forEach(row=>{
+    const input = row.querySelector('.price-input');
+    const def = input.dataset.default;
+    if(def){input.value=def;const id=row.dataset.id;state[id]=state[id]||{};state[id].price=def;}
+  });
+  save(state); recalc();
+}
+ 
+recalc();
 </script>
 </body>
 </html>
