@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagramme</title>
+<link rel="stylesheet" href="../css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:18px;}
+.chart-title{font-family:'Syne';font-weight:700;font-size:1rem;margin-bottom:4px;}
+.chart-sub{font-size:11.5px;color:var(--muted);margin-bottom:14px;}
+.chart-wrap{position:relative;height:240px;}
+.range-bar{display:flex;gap:6px;margin-bottom:18px;}
+.range-btn{padding:6px 13px;font-size:11.5px;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);border-radius:20px;cursor:pointer;font-family:inherit;}
+.range-btn.active{background:var(--lime);color:#000;border-color:var(--lime);font-weight:600;}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.stat-box .stat-lbl{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+.stat-box .stat-val{font-family:'Syne';font-weight:700;font-size:1.3rem;color:var(--lime);margin-top:4px;display:block;}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13.5px;}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="page-hero">
+  <span class="page-hero-tag">Verlauf · Daten aus dem Tracker</span>
+  <h1>Dia<span>gramme</span></h1>
+  <p>Dein Fortschritt visualisiert. Trag im Tracker täglich deine Werte ein, dann siehst du hier den Verlauf.</p>
+</div>
+
+<div class="content">
+
+<section class="section fade-in">
+
+  <div class="range-bar">
+    <button class="range-btn active" data-r="7">7 Tage</button>
+    <button class="range-btn" data-r="30">30 Tage</button>
+    <button class="range-btn" data-r="90">3 Monate</button>
+    <button class="range-btn" data-r="365">1 Jahr</button>
+    <button class="range-btn" data-r="all">Alles</button>
+  </div>
+
+  <div class="stats-row" id="stats"></div>
+
+  <div id="charts">
+    <div class="chart-card">
+      <div class="chart-title">Körpergewicht</div>
+      <div class="chart-sub">kg im Verlauf</div>
+      <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Kalorien pro Tag</div>
+      <div class="chart-sub">Ziel: 3200 kcal</div>
+      <div class="chart-wrap"><canvas id="kcalChart"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Schmerzlevel</div>
+      <div class="chart-sub">0 = kein Schmerz, 10 = stark</div>
+      <div class="chart-wrap"><canvas id="painChart"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Trainingseinheiten</div>
+      <div class="chart-sub">absolvierte Einheiten</div>
+      <div class="chart-wrap"><canvas id="trainChart"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Trainingsgewichte</div>
+      <div class="chart-sub">Hauptübungen im Verlauf</div>
+      <div class="chart-wrap"><canvas id="exChart"></canvas></div>
+    </div>
+  </div>
+
+  <div id="emptyState" class="empty" style="display:none;">
+    Noch keine Daten. Geh zum <a href="tracker.html" style="color:var(--lime);">Tracker</a> und trag deine ersten Werte ein.
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="../js/shared.js"></script>
+<script>
+injectNav();injectFooter();initFadeIn();
+
+const COLORS = {
+  lime:'#c9f53e', amber:'#f5bf3e', coral:'#ff5c3e', blue:'#3ec9f5',
+  grid:'rgba(255,255,255,0.05)', text:'#6b6960'
+};
+
+Chart.defaults.color = COLORS.text;
+Chart.defaults.font.family = 'Instrument Sans';
+Chart.defaults.font.size = 11;
+
+let charts = {};
+let currentRange = 7;
+
+document.querySelectorAll('.range-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.range-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentRange = b.dataset.r==='all' ? 'all' : parseInt(b.dataset.r);
+    render();
+  });
+});
+
+function filterEntries(){
+  const all = getAllEntries();
+  if(currentRange==='all') return all;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate()-currentRange);
+  return all.filter(e=>new Date(e.date)>=cutoff);
+}
+
+function makeChart(id, labels, datasets, opts={}){
+  if(charts[id]) charts[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx,{
+    type: opts.type||'line',
+    data: {labels,datasets},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:opts.legend!==false,labels:{boxWidth:10,boxHeight:10,padding:14,font:{size:11}}}},
+      scales:{
+        x:{grid:{color:COLORS.grid,drawBorder:false},ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:8}},
+        y:{grid:{color:COLORS.grid,drawBorder:false},beginAtZero:opts.zero||false}
+      },
+      elements:{point:{radius:3,hoverRadius:5},line:{tension:0.3,borderWidth:2}}
+    }
+  });
+}
+
+function render(){
+  const data = filterEntries();
+  const empty = document.getElementById('emptyState');
+  const ch = document.getElementById('charts');
+  const stats = document.getElementById('stats');
+
+  if(data.length===0){
+    empty.style.display='block';
+    ch.style.display='none';
+    stats.innerHTML='';
+    return;
+  }
+  empty.style.display='none';
+  ch.style.display='block';
+
+  const labels = data.map(d=>d.date.slice(5));
+
+  // STATS
+  const weights = data.filter(d=>d.weight).map(d=>d.weight);
+  const kcals = data.filter(d=>d.kcal).map(d=>d.kcal);
+  const pains = data.filter(d=>d.pain!=null).map(d=>d.pain);
+  const trainCount = data.filter(d=>d.cTrain).length;
+  const avg = a => a.length ? (a.reduce((s,x)=>s+x,0)/a.length).toFixed(1) : '–';
+
+  stats.innerHTML = `
+    <div class="stat-box"><div class="stat-lbl">Ø Gewicht</div><span class="stat-val">${avg(weights)} kg</span></div>
+    <div class="stat-box"><div class="stat-lbl">Ø Kalorien</div><span class="stat-val">${avg(kcals)}</span></div>
+    <div class="stat-box"><div class="stat-lbl">Ø Schmerz</div><span class="stat-val">${avg(pains)}</span></div>
+    <div class="stat-box"><div class="stat-lbl">Trainings</div><span class="stat-val">${trainCount}</span></div>
+    <div class="stat-box"><div class="stat-lbl">Einträge</div><span class="stat-val">${data.length}</span></div>
+  `;
+
+  // WEIGHT
+  makeChart('weightChart', labels, [{
+    label:'Gewicht (kg)', data:data.map(d=>d.weight||null), borderColor:COLORS.lime,
+    backgroundColor:'rgba(201,245,62,0.1)', fill:true, spanGaps:true
+  }],{legend:false});
+
+  // KCAL
+  makeChart('kcalChart', labels, [{
+    label:'Kalorien', data:data.map(d=>d.kcal||null), borderColor:COLORS.amber,
+    backgroundColor:'rgba(245,191,62,0.1)', fill:true, spanGaps:true
+  },{
+    label:'Ziel (3200)', data:data.map(()=>3200), borderColor:'rgba(255,255,255,0.2)',
+    borderDash:[5,5], pointRadius:0, fill:false
+  }]);
+
+  // PAIN
+  makeChart('painChart', labels, [{
+    label:'Schmerz', data:data.map(d=>d.pain==null?null:d.pain), borderColor:COLORS.coral,
+    backgroundColor:'rgba(255,92,62,0.1)', fill:true, spanGaps:true
+  }],{legend:false,zero:true});
+
+  // TRAIN (bar)
+  makeChart('trainChart', labels, [{
+    label:'Training', data:data.map(d=>d.cTrain?1:0), backgroundColor:COLORS.lime
+  }],{type:'bar',legend:false,zero:true});
+
+  // EXERCISES
+  const exKeys = {bp:'Beinpresse',sb:'Schrägbank',sd:'Schulter',lz:'Latzug',sr:'Sitzrudern',ht:'Hip Thrust'};
+  const palette = [COLORS.lime,COLORS.amber,COLORS.coral,COLORS.blue,'#a98cff','#5cffaa'];
+  const exDatasets = Object.entries(exKeys).map(([k,name],i)=>({
+    label:name,
+    data:data.map(d=>(d.ex&&d.ex[k])||null),
+    borderColor:palette[i],
+    backgroundColor:palette[i]+'22',
+    fill:false, spanGaps:true
+  }));
+  makeChart('exChart', labels, exDatasets);
+}
+
+render();
+</script>
+</body>
+</html>

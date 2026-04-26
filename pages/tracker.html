@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tracker</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+.tk-field{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.tk-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+.tk-input{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:8px 10px;border-radius:6px;font-family:inherit;font-size:14px;}
+.tk-input:focus{outline:none;border-color:var(--lime);}
+.tk-slider{width:100%;}
+.tk-pain-val{font-family:'Syne';font-weight:700;font-size:1.5rem;color:var(--lime);text-align:center;display:block;margin-top:4px;}
+.tk-checks{display:flex;flex-direction:column;gap:8px;}
+.tk-check{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13.5px;}
+.tk-check input{width:18px;height:18px;accent-color:var(--lime);}
+.tk-btn{padding:11px 20px;border-radius:8px;border:none;font-family:inherit;font-size:12.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.tk-btn-primary{background:var(--lime);color:#000;}
+.tk-btn-primary:hover{background:#d6ff5a;}
+.tk-btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
+.tk-status{font-size:12px;color:var(--lime);margin-left:14px;opacity:0;transition:opacity .3s;}
+.tk-status.show{opacity:1;}
+.tk-weight-grid{display:grid;grid-template-columns:1fr 80px 80px;gap:8px;align-items:center;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);}
+.tk-weight-grid:last-child{border-bottom:none;}
+.tk-weight-grid input{padding:6px 8px;}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="page-hero">
+  <span class="page-hero-tag">Daten lokal im Browser gespeichert</span>
+  <h1>Daily <span>Tracker</span></h1>
+  <p>Trag jeden Tag deine Werte ein. Diagramme zeigen dir den Verlauf.</p>
+</div>
+
+<div class="content">
+
+<section class="section fade-in">
+  <div class="tk-field" style="margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;">
+      <span class="tk-lbl">Datum</span>
+      <input type="date" id="datePicker" class="tk-input">
+    </div>
+    <button class="tk-btn tk-btn-secondary" onclick="loadDate()">Tag laden</button>
+  </div>
+
+  <div class="tk-grid">
+
+    <div class="tk-field">
+      <span class="tk-lbl">Körpergewicht (kg)</span>
+      <input type="number" step="0.1" id="weight" class="tk-input" placeholder="z. B. 60.5">
+    </div>
+
+    <div class="tk-field">
+      <span class="tk-lbl">Kalorien (kcal)</span>
+      <input type="number" id="kcal" class="tk-input" placeholder="z. B. 3200">
+    </div>
+
+    <div class="tk-field">
+      <span class="tk-lbl">Schmerzlevel · 0–10</span>
+      <input type="range" min="0" max="10" value="0" id="pain" class="tk-slider" oninput="document.getElementById('painVal').textContent=this.value">
+      <span class="tk-pain-val" id="painVal">0</span>
+    </div>
+
+    <div class="tk-field">
+      <span class="tk-lbl">Trainingseinheit</span>
+      <select id="session" class="tk-input">
+        <option value="">— keine —</option>
+        <option value="A">Einheit A · Push</option>
+        <option value="B">Einheit B · Beine</option>
+        <option value="C">Einheit C · Pull</option>
+        <option value="M">Nur Mobility</option>
+      </select>
+    </div>
+
+    <div class="tk-field" style="grid-column:1/-1;">
+      <span class="tk-lbl">Checkliste</span>
+      <div class="tk-checks">
+        <label class="tk-check"><input type="checkbox" id="cTrain"> Training absolviert</label>
+        <label class="tk-check"><input type="checkbox" id="cMob"> Mobility gemacht</label>
+        <label class="tk-check"><input type="checkbox" id="cWater"> 3 L Wasser</label>
+        <label class="tk-check"><input type="checkbox" id="cSleep"> 7+ h Schlaf</label>
+        <label class="tk-check"><input type="checkbox" id="cMeals"> Alle Mahlzeiten</label>
+      </div>
+    </div>
+
+    <div class="tk-field" style="grid-column:1/-1;">
+      <span class="tk-lbl">Trainingsgewichte (kg)</span>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Nur ausfüllen wenn relevant für die heutige Einheit</div>
+      <div class="tk-weight-grid"><div>Beinpresse</div><input type="number" id="ex_bp" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Schrägbankdrücken</div><input type="number" id="ex_sb" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Schulterdrücken</div><input type="number" id="ex_sd" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Latzug</div><input type="number" id="ex_lz" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Sitzrudern</div><input type="number" id="ex_sr" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Hip Thrust</div><input type="number" id="ex_ht" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Beinbeuger</div><input type="number" id="ex_bb" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Beinstrecker</div><input type="number" id="ex_bs" class="tk-input" placeholder="kg"><div></div></div>
+    </div>
+
+    <div class="tk-field" style="grid-column:1/-1;">
+      <span class="tk-lbl">Notizen</span>
+      <textarea id="notes" class="tk-input" rows="3" placeholder="Wie war der Tag? Schmerzen, Energie, Schlaf, Stimmung..."></textarea>
+    </div>
+
+  </div>
+
+  <div style="margin-top:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+    <button class="tk-btn tk-btn-primary" onclick="saveEntry()">Speichern</button>
+    <button class="tk-btn tk-btn-secondary" onclick="clearForm()">Zurücksetzen</button>
+    <button class="tk-btn tk-btn-secondary" onclick="exportData()">Export JSON</button>
+    <span class="tk-status" id="status">✓ Gespeichert</span>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="../js/shared.js"></script>
+<script>
+injectNav();injectFooter();initFadeIn();
+
+document.getElementById('datePicker').value = getTodayKey();
+loadDate();
+
+function loadDate(){
+  const d = document.getElementById('datePicker').value || getTodayKey();
+  const e = getDayEntry(d);
+  document.getElementById('weight').value = e.weight||'';
+  document.getElementById('kcal').value = e.kcal||'';
+  document.getElementById('pain').value = e.pain||0;
+  document.getElementById('painVal').textContent = e.pain||0;
+  document.getElementById('session').value = e.session||'';
+  document.getElementById('cTrain').checked = !!e.cTrain;
+  document.getElementById('cMob').checked = !!e.cMob;
+  document.getElementById('cWater').checked = !!e.cWater;
+  document.getElementById('cSleep').checked = !!e.cSleep;
+  document.getElementById('cMeals').checked = !!e.cMeals;
+  document.getElementById('notes').value = e.notes||'';
+  ['bp','sb','sd','lz','sr','ht','bb','bs'].forEach(k=>{
+    document.getElementById('ex_'+k).value = (e.ex && e.ex[k])||'';
+  });
+}
+
+function saveEntry(){
+  const d = document.getElementById('datePicker').value || getTodayKey();
+  const ex={};
+  ['bp','sb','sd','lz','sr','ht','bb','bs'].forEach(k=>{
+    const v = document.getElementById('ex_'+k).value;
+    if(v) ex[k] = parseFloat(v);
+  });
+  saveDayEntry(d, {
+    weight: parseFloat(document.getElementById('weight').value)||null,
+    kcal: parseInt(document.getElementById('kcal').value)||null,
+    pain: parseInt(document.getElementById('pain').value)||0,
+    session: document.getElementById('session').value,
+    cTrain: document.getElementById('cTrain').checked,
+    cMob: document.getElementById('cMob').checked,
+    cWater: document.getElementById('cWater').checked,
+    cSleep: document.getElementById('cSleep').checked,
+    cMeals: document.getElementById('cMeals').checked,
+    notes: document.getElementById('notes').value,
+    ex
+  });
+  const s = document.getElementById('status');
+  s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'),2000);
+}
+
+function clearForm(){
+  if(!confirm('Eingaben für diesen Tag zurücksetzen?')) return;
+  const d = document.getElementById('datePicker').value || getTodayKey();
+  const all = getTrackerData();
+  delete all[d];
+  saveTrackerData(all);
+  loadDate();
+}
+
+function exportData(){
+  const data = getTrackerData();
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='jawad-tracker-'+getTodayKey()+'.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Einkaufsliste</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.shop-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.shop-row:hover{background:rgba(255,255,255,.02);}
+.shop-row:last-child{border-bottom:none;}
+.shop-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--surface);}
+.shop-row.done .shop-check{background:var(--lime);border-color:var(--lime);}
+.shop-row.done .shop-check::after{content:'✓';color:#000;font-weight:700;font-size:13px;}
+.shop-row.done .shop-name{text-decoration:line-through;color:var(--muted);}
+.shop-name{flex:1;font-size:13.5px;}
+.shop-amt{font-size:12px;color:var(--muted);}
+.shop-price{font-size:12px;font-weight:500;color:var(--lime);min-width:50px;text-align:right;}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<div class="page-hero">
+  <span class="page-hero-tag">~200 € pro Monat · Anklicken zum Abhaken</span>
+  <h1>Einkaufs<span>liste</span></h1>
+  <p>Monatsbudget für deinen Plan. Status wird im Browser gespeichert.</p>
+</div>
+
+<div class="content">
+
+<section class="section fade-in">
+  <div class="alert alert-info"><strong>Tipp:</strong> Aldi/Lidl für Basics, türkischer Supermarkt für Reis, Datteln, Joghurt, Hähnchen (oft günstiger und halal).</div>
+
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-head"><span class="card-label">Protein</span><span class="card-sub">~75 €</span></div>
+      <div class="shop-row" data-id="p1"><div class="shop-check"></div><div class="shop-name">Hähnchenbrust</div><div class="shop-amt">3 kg</div><div class="shop-price">21 €</div></div>
+      <div class="shop-row" data-id="p2"><div class="shop-check"></div><div class="shop-name">Lachs / Forelle</div><div class="shop-amt">800 g</div><div class="shop-price">14 €</div></div>
+      <div class="shop-row" data-id="p3"><div class="shop-check"></div><div class="shop-name">Hackfleisch (Rind)</div><div class="shop-amt">1 kg</div><div class="shop-price">9 €</div></div>
+      <div class="shop-row" data-id="p4"><div class="shop-check"></div><div class="shop-name">Eier</div><div class="shop-amt">30 Stück</div><div class="shop-price">8 €</div></div>
+      <div class="shop-row" data-id="p5"><div class="shop-check"></div><div class="shop-name">Skyr / Magerquark</div><div class="shop-amt">2 kg</div><div class="shop-price">10 €</div></div>
+      <div class="shop-row" data-id="p6"><div class="shop-check"></div><div class="shop-name">Thunfisch (Dose)</div><div class="shop-amt">6 Dosen</div><div class="shop-price">7 €</div></div>
+      <div class="shop-row" data-id="p7"><div class="shop-check"></div><div class="shop-name">Whey Protein (optional)</div><div class="shop-amt">1 kg</div><div class="shop-price">25 €</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-label">Kohlenhydrate</span><span class="card-sub">~30 €</span></div>
+      <div class="shop-row" data-id="k1"><div class="shop-check"></div><div class="shop-name">Basmati-Reis</div><div class="shop-amt">5 kg</div><div class="shop-price">12 €</div></div>
+      <div class="shop-row" data-id="k2"><div class="shop-check"></div><div class="shop-name">Haferflocken</div><div class="shop-amt">2 kg</div><div class="shop-price">4 €</div></div>
+      <div class="shop-row" data-id="k3"><div class="shop-check"></div><div class="shop-name">Vollkornbrot</div><div class="shop-amt">2 Brote</div><div class="shop-price">6 €</div></div>
+      <div class="shop-row" data-id="k4"><div class="shop-check"></div><div class="shop-name">Pasta</div><div class="shop-amt">1 kg</div><div class="shop-price">2 €</div></div>
+      <div class="shop-row" data-id="k5"><div class="shop-check"></div><div class="shop-name">Bulgur</div><div class="shop-amt">1 kg</div><div class="shop-price">3 €</div></div>
+      <div class="shop-row" data-id="k6"><div class="shop-check"></div><div class="shop-name">Linsen / Kichererbsen</div><div class="shop-amt">1 kg</div><div class="shop-price">3 €</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-label">Gemüse & Obst</span><span class="card-sub">~45 €</span></div>
+      <div class="shop-row" data-id="g1"><div class="shop-check"></div><div class="shop-name">Tomaten</div><div class="shop-amt">2 kg</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="g2"><div class="shop-check"></div><div class="shop-name">Gurken</div><div class="shop-amt">5 Stück</div><div class="shop-price">4 €</div></div>
+      <div class="shop-row" data-id="g3"><div class="shop-check"></div><div class="shop-name">Zwiebeln</div><div class="shop-amt">2 kg</div><div class="shop-price">3 €</div></div>
+      <div class="shop-row" data-id="g4"><div class="shop-check"></div><div class="shop-name">Knoblauch</div><div class="shop-amt">3 Knollen</div><div class="shop-price">2 €</div></div>
+      <div class="shop-row" data-id="g5"><div class="shop-check"></div><div class="shop-name">Spinat (TK)</div><div class="shop-amt">1 kg</div><div class="shop-price">3 €</div></div>
+      <div class="shop-row" data-id="g6"><div class="shop-check"></div><div class="shop-name">Brokkoli (TK)</div><div class="shop-amt">1 kg</div><div class="shop-price">3 €</div></div>
+      <div class="shop-row" data-id="g7"><div class="shop-check"></div><div class="shop-name">Bananen</div><div class="shop-amt">2 kg</div><div class="shop-price">4 €</div></div>
+      <div class="shop-row" data-id="g8"><div class="shop-check"></div><div class="shop-name">Äpfel</div><div class="shop-amt">2 kg</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="g9"><div class="shop-check"></div><div class="shop-name">Beeren (TK)</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="g10"><div class="shop-check"></div><div class="shop-name">Salat</div><div class="shop-amt">2 Köpfe</div><div class="shop-price">3 €</div></div>
+      <div class="shop-row" data-id="g11"><div class="shop-check"></div><div class="shop-name">Datteln</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="g12"><div class="shop-check"></div><div class="shop-name">Zitronen</div><div class="shop-amt">5 Stück</div><div class="shop-price">3 €</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="card-label">Fette & Sonstiges</span><span class="card-sub">~50 €</span></div>
+      <div class="shop-row" data-id="f1"><div class="shop-check"></div><div class="shop-name">Olivenöl</div><div class="shop-amt">1 L</div><div class="shop-price">8 €</div></div>
+      <div class="shop-row" data-id="f2"><div class="shop-check"></div><div class="shop-name">Erdnussbutter</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="f3"><div class="shop-check"></div><div class="shop-name">Mandeln</div><div class="shop-amt">500 g</div><div class="shop-price">7 €</div></div>
+      <div class="shop-row" data-id="f4"><div class="shop-check"></div><div class="shop-name">Walnüsse</div><div class="shop-amt">300 g</div><div class="shop-price">6 €</div></div>
+      <div class="shop-row" data-id="f5"><div class="shop-check"></div><div class="shop-name">Honig</div><div class="shop-amt">500 g</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="f6"><div class="shop-check"></div><div class="shop-name">Feta</div><div class="shop-amt">400 g</div><div class="shop-price">5 €</div></div>
+      <div class="shop-row" data-id="f7"><div class="shop-check"></div><div class="shop-name">Hummus</div><div class="shop-amt">2 Becher</div><div class="shop-price">4 €</div></div>
+      <div class="shop-row" data-id="f8"><div class="shop-check"></div><div class="shop-name">Hafermilch</div><div class="shop-amt">2 L</div><div class="shop-price">4 €</div></div>
+      <div class="shop-row" data-id="f9"><div class="shop-check"></div><div class="shop-name">Gewürze (Safran, Sumach, Kurkuma)</div><div class="shop-amt">divers</div><div class="shop-price">6 €</div></div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:24px;text-align:center;">
+    <button onclick="resetShop()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:8px 18px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Liste zurücksetzen</button>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="../js/shared.js"></script>
+<script>
+injectNav();injectFooter();initFadeIn();
+
+const SHOP_KEY='jawad_shop_v1';
+function loadShop(){try{return JSON.parse(localStorage.getItem(SHOP_KEY))||{}}catch{return{}}}
+function saveShop(s){localStorage.setItem(SHOP_KEY,JSON.stringify(s));}
+
+const state = loadShop();
+document.querySelectorAll('.shop-row').forEach(row=>{
+  const id = row.dataset.id;
+  if(state[id]) row.classList.add('done');
+  row.addEventListener('click',()=>{
+    row.classList.toggle('done');
+    state[id] = row.classList.contains('done');
+    saveShop(state);
+  });
+});
+
+function resetShop(){
+  if(!confirm('Wirklich alle Häkchen entfernen?')) return;
+  localStorage.removeItem(SHOP_KEY);
+  document.querySelectorAll('.shop-row').forEach(r=>r.classList.remove('done'));
+}
+</script>
+</body>
+</html>
