@@ -5,18 +5,48 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ernährung</title>
 <link rel="stylesheet" href="../css/style.css">
+<style>
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;}
+.day-head{padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+.day-head:hover{background:var(--surface3);}
+.day-name{font-family:'Syne';font-weight:700;font-size:1rem;}
+.day-name span{color:var(--lime);}
+.day-kcal{font-size:11px;color:var(--amber);font-weight:500;letter-spacing:1px;}
+.day-body{display:none;}
+.day-card.open .day-body{display:block;}
+.day-card.open .day-toggle{transform:rotate(180deg);}
+.day-toggle{transition:transform .2s;color:var(--muted);font-size:14px;}
+.meal-row{display:grid;grid-template-columns:90px 1fr 70px;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:start;}
+.meal-row:last-child{border-bottom:none;}
+.meal-time{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:500;padding-top:2px;}
+.meal-name{font-size:13.5px;line-height:1.5;}
+.meal-name strong{color:var(--text);font-weight:500;}
+.meal-name .meal-desc{display:block;color:var(--muted);font-size:12px;margin-top:2px;}
+.meal-kcal{font-size:11.5px;color:var(--lime);font-weight:500;text-align:right;padding-top:2px;}
+.prep-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;}
+.prep-title{font-family:'Syne';font-weight:700;font-size:1.05rem;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.prep-icon{width:32px;height:32px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.prep-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.prep-list{list-style:none;font-size:13px;line-height:1.7;color:var(--muted);}
+.prep-list li{padding:5px 0;border-bottom:1px dashed var(--border);}
+.prep-list li:last-child{border-bottom:none;}
+.prep-list strong{color:var(--text);font-weight:500;}
+@media(max-width:520px){
+  .meal-row{grid-template-columns:60px 1fr 55px;gap:8px;}
+}
+</style>
 </head>
 <body>
 <div class="page-wrap">
-
+ 
 <div class="page-hero">
-  <span class="page-hero-tag">3200 kcal · 150 g Protein · halal</span>
+  <span class="page-hero-tag">~3200 kcal · 150 g Protein · halal</span>
   <h1>Ernährungs<span>plan</span></h1>
-  <p>Abwechslungsreiche Mahlzeiten – persisch, mediterran, schnell. Meal Prep am Sonntag spart Zeit unter der Woche.</p>
+  <p>Konkrete Mahlzeiten für jeden Tag der Woche. Meal-Prep-Vorschläge für Sonntag.</p>
 </div>
-
+ 
 <div class="content">
-
+ 
 <section class="section fade-in">
   <div class="grid-4">
     <div class="card" style="padding:14px 16px"><div class="stat-lbl">Kalorien</div><div class="stat-val">3200 kcal</div></div>
@@ -25,82 +55,227 @@
     <div class="card" style="padding:14px 16px"><div class="stat-lbl">Fett</div><div class="stat-val">100 g</div></div>
   </div>
 </section>
-
+ 
 <section class="section fade-in">
   <div class="section-head">
     <div class="section-icon">📅</div>
-    <div><div class="section-title">Beispiel<span>woche</span></div><div class="section-desc">3 Beispieltage – Rotation für Abwechslung</div></div>
+    <div><div class="section-title">7-Tage-<span>Plan</span></div><div class="section-desc">Tag antippen für Details. Abwechslung garantiert.</div></div>
   </div>
-
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="d1">Tag 1 · Persisch</button>
-    <button class="tab-btn" data-tab="d2">Tag 2 · Mediterran</button>
-    <button class="tab-btn" data-tab="d3">Tag 3 · Schnell</button>
-  </div>
-
-  <div class="tab-pane active" id="d1">
-    <div class="card">
-      <div class="card-head"><span class="card-label">Tag 1</span><span class="card-sub">~3200 kcal</span></div>
-      <div class="ex-row"><div><div class="ex-name">Frühstück 8:00</div><div class="ex-note">Overnight Oats mit Banane, Walnüssen, Datteln, Honig</div></div><div class="ex-sets">650 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Snack 11:00</div><div class="ex-note">Vollkornbrot mit Hummus + 1 Apfel</div></div><div class="ex-sets">400 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Mittag 14:00</div><div class="ex-note">Jujeh Chelow – Safran-Hähnchen mit Basmati-Reis & Joghurt</div></div><div class="ex-sets">850 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Snack 17:00</div><div class="ex-note">Skyr mit Honig + Mandeln</div></div><div class="ex-sets">450 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Abend 20:00</div><div class="ex-note">Linsen-Eintopf mit Fladenbrot & Feta</div></div><div class="ex-sets">850 kcal</div></div>
+ 
+  <!-- MO -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Montag <span>· Uni</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">8:00<br>Frühstück</div><div class="meal-name"><strong>Overnight Oats</strong><span class="meal-desc">100g Haferflocken + 250ml Hafermilch + Banane + 1 EL Erdnussbutter + Honig + Walnüsse</span></div><div class="meal-kcal">650</div></div>
+      <div class="meal-row"><div class="meal-time">11:00<br>Snack</div><div class="meal-name"><strong>Skyr + Datteln</strong><span class="meal-desc">500g Skyr + 4 Datteln + Honig + Mandeln</span></div><div class="meal-kcal">500</div></div>
+      <div class="meal-row"><div class="meal-time">14:00<br>Mittag</div><div class="meal-name"><strong>Mensa oder Meal-Prep</strong><span class="meal-desc">Wenn Mensa: Hauptgericht mit Reis · Wenn Meal-Prep: Hähnchen-Reis-Bowl mit Gemüse</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">17:00<br>Snack</div><div class="meal-name"><strong>Whey-Shake + Banane</strong><span class="meal-desc">30g Whey + 250ml Hafermilch + 1 Banane + 2 EL Erdnussbutter</span></div><div class="meal-kcal">450</div></div>
+      <div class="meal-row"><div class="meal-time">20:00<br>Abend</div><div class="meal-name"><strong>Hackfleisch-Reis</strong><span class="meal-desc">200g Hack + 100g Reis + Tomaten + Zwiebel + Joghurt</span></div><div class="meal-kcal">800</div></div>
     </div>
   </div>
-
-  <div class="tab-pane" id="d2">
-    <div class="card">
-      <div class="card-head"><span class="card-label">Tag 2</span><span class="card-sub">~3200 kcal</span></div>
-      <div class="ex-row"><div><div class="ex-name">Frühstück 8:00</div><div class="ex-note">3 Eier-Omelett mit Spinat, Feta, 2 Scheiben Vollkornbrot</div></div><div class="ex-sets">700 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Snack 11:00</div><div class="ex-note">Bananen-Erdnussbutter-Smoothie mit Hafermilch</div></div><div class="ex-sets">450 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Mittag 14:00</div><div class="ex-note">Lachs-Pasta mit Sahne-Knoblauch-Sauce + Salat</div></div><div class="ex-sets">900 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Snack 17:00</div><div class="ex-note">Skyr mit Beeren + Walnüsse</div></div><div class="ex-sets">400 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Abend 20:00</div><div class="ex-note">Kichererbsen-Curry mit Reis</div></div><div class="ex-sets">750 kcal</div></div>
+ 
+  <!-- DI -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Dienstag <span>· Uni + Arbeit bis 22:20</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">8:00<br>Frühstück</div><div class="meal-name"><strong>3 Eier + Brot</strong><span class="meal-desc">3 Eier mit Spinat + 2 Scheiben Vollkornbrot + 1 EL Erdnussbutter</span></div><div class="meal-kcal">700</div></div>
+      <div class="meal-row"><div class="meal-time">11:00<br>Snack</div><div class="meal-name"><strong>Banane + Mandeln</strong><span class="meal-desc">2 Bananen + 30g Mandeln</span></div><div class="meal-kcal">400</div></div>
+      <div class="meal-row"><div class="meal-time">14:00<br>Mittag</div><div class="meal-name"><strong>Mensa</strong><span class="meal-desc">Großes Mensa-Gericht mit Beilage. Lange Tage = warm essen.</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">17:00<br>Box</div><div class="meal-name"><strong>Meal-Prep-Box (mitnehmen)</strong><span class="meal-desc">Hähnchen-Reis-Bowl aus dem Sonntag-Prep für Arbeit</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">22:30<br>Abend</div><div class="meal-name"><strong>Schneller Snack zuhause</strong><span class="meal-desc">2 Scheiben Brot + Thunfisch + Skyr</span></div><div class="meal-kcal">500</div></div>
     </div>
   </div>
-
-  <div class="tab-pane" id="d3">
-    <div class="card">
-      <div class="card-head"><span class="card-label">Tag 3</span><span class="card-sub">~3200 kcal · Meal Prep</span></div>
-      <div class="ex-row"><div><div class="ex-name">Frühstück 8:00</div><div class="ex-note">Skyr mit Müsli, Banane, Honig, Mandeln</div></div><div class="ex-sets">600 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Snack 11:00</div><div class="ex-note">Thunfisch-Sandwich + Apfel</div></div><div class="ex-sets">450 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Mittag 14:00</div><div class="ex-note">Meal Prep: Hähnchen + Reis + Gemüse (vorbereitet Sonntag)</div></div><div class="ex-sets">800 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Snack 17:00</div><div class="ex-note">Vollkornbrot mit Käse + Datteln</div></div><div class="ex-sets">500 kcal</div></div>
-      <div class="ex-row"><div><div class="ex-name">Abend 20:00</div><div class="ex-note">Hackfleisch-Bulgur-Pfanne mit Joghurt</div></div><div class="ex-sets">850 kcal</div></div>
+ 
+  <!-- MI -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Mittwoch <span>· Training A · Push</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">8:00<br>Frühstück</div><div class="meal-name"><strong>Skyr-Müsli-Bowl</strong><span class="meal-desc">500g Skyr + 80g Haferflocken + Banane + Honig + Walnüsse</span></div><div class="meal-kcal">700</div></div>
+      <div class="meal-row"><div class="meal-time">11:00<br>Snack</div><div class="meal-name"><strong>Brot + Hummus</strong><span class="meal-desc">2 Scheiben Vollkornbrot + Hummus + Apfel</span></div><div class="meal-kcal">450</div></div>
+      <div class="meal-row"><div class="meal-time">16:00<br>Pre-Workout</div><div class="meal-name"><strong>Reis + Hähnchen (klein)</strong><span class="meal-desc">100g Reis + 150g Hähnchen, ca. 90 Min vor dem Training</span></div><div class="meal-kcal">600</div></div>
+      <div class="meal-row"><div class="meal-time">20:00<br>Post-Workout</div><div class="meal-name"><strong>Whey + Hähnchen-Reis groß</strong><span class="meal-desc">30g Whey direkt nach dem Training. Danach: 200g Hähnchen + 150g Reis + Gemüse</span></div><div class="meal-kcal">950</div></div>
+      <div class="meal-row"><div class="meal-time">22:00<br>Snack</div><div class="meal-name"><strong>Skyr + Datteln</strong><span class="meal-desc">200g Skyr + 3 Datteln</span></div><div class="meal-kcal">300</div></div>
+    </div>
+  </div>
+ 
+  <!-- DO -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Donnerstag <span>· Uni</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">8:00<br>Frühstück</div><div class="meal-name"><strong>Overnight Oats Variante</strong><span class="meal-desc">100g Haferflocken + Hafermilch + Skyr + Beeren + Honig + Mandeln</span></div><div class="meal-kcal">650</div></div>
+      <div class="meal-row"><div class="meal-time">11:00<br>Snack</div><div class="meal-name"><strong>Whey-Shake + Apfel</strong><span class="meal-desc">30g Whey + 250ml Hafermilch + 1 Apfel</span></div><div class="meal-kcal">350</div></div>
+      <div class="meal-row"><div class="meal-time">14:00<br>Mittag</div><div class="meal-name"><strong>Mensa oder Meal-Prep</strong><span class="meal-desc">Hähnchen-Reis-Bowl wenn nicht in Uni gegessen</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">17:00<br>Snack</div><div class="meal-name"><strong>Brot + Käse + Datteln</strong><span class="meal-desc">2 Scheiben Vollkornbrot + Feta + 3 Datteln</span></div><div class="meal-kcal">500</div></div>
+      <div class="meal-row"><div class="meal-time">20:00<br>Abend</div><div class="meal-name"><strong>Linsen-Eintopf</strong><span class="meal-desc">200g Linsen + Tomaten + Zwiebel + Knoblauch + Olivenöl + Fladenbrot</span></div><div class="meal-kcal">900</div></div>
+    </div>
+  </div>
+ 
+  <!-- FR -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Freitag <span>· Training B · Beine + Arbeit bis 22:18</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">7:30<br>Pre-Workout</div><div class="meal-name"><strong>Banane + Honig</strong><span class="meal-desc">1 Banane + 1 EL Honig vor dem Training (leicht)</span></div><div class="meal-kcal">200</div></div>
+      <div class="meal-row"><div class="meal-time">11:30<br>Post-Workout</div><div class="meal-name"><strong>Großes Frühstück</strong><span class="meal-desc">Whey + 3 Eier + 100g Haferflocken + Banane + Erdnussbutter</span></div><div class="meal-kcal">1000</div></div>
+      <div class="meal-row"><div class="meal-time">14:00<br>Mittag</div><div class="meal-name"><strong>Hähnchen-Pasta</strong><span class="meal-desc">150g Pasta + 200g Hähnchen + Tomatensauce + Olivenöl</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">17:00<br>Box für Arbeit</div><div class="meal-name"><strong>Meal-Prep-Box</strong><span class="meal-desc">Bulgur-Hack-Pfanne + Joghurt</span></div><div class="meal-kcal">700</div></div>
+      <div class="meal-row"><div class="meal-time">22:30<br>Snack</div><div class="meal-name"><strong>Skyr + Mandeln</strong><span class="meal-desc">200g Skyr + 30g Mandeln + Honig</span></div><div class="meal-kcal">500</div></div>
+    </div>
+  </div>
+ 
+  <!-- SA -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Samstag <span>· Training C · Pull + Schicht</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">9:00<br>Frühstück</div><div class="meal-name"><strong>Eier + Brot + Avocado</strong><span class="meal-desc">3 Eier + 2 Scheiben Vollkornbrot + Tomaten · oder Avocado wenn da</span></div><div class="meal-kcal">700</div></div>
+      <div class="meal-row"><div class="meal-time">12:00<br>Pre/Post</div><div class="meal-name"><strong>Reis + Hähnchen</strong><span class="meal-desc">150g Reis + 200g Hähnchen + Salat (vor oder nach Training je nach Schicht)</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">15:00<br>Snack</div><div class="meal-name"><strong>Whey + Datteln</strong><span class="meal-desc">30g Whey + 4 Datteln + Mandeln</span></div><div class="meal-kcal">500</div></div>
+      <div class="meal-row"><div class="meal-time">18:00<br>Box</div><div class="meal-name"><strong>Persische Schicht-Box</strong><span class="meal-desc">Jujeh-Hähnchen + Reis + Joghurt + Gurken-Tomaten-Salat</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">22:00<br>Abend</div><div class="meal-name"><strong>Skyr + Honig + Walnüsse</strong><span class="meal-desc">300g Skyr + Honig + Walnüsse</span></div><div class="meal-kcal">400</div></div>
+    </div>
+  </div>
+ 
+  <!-- SO -->
+  <div class="day-card">
+    <div class="day-head" onclick="this.parentElement.classList.toggle('open')">
+      <div><div class="day-name">Sonntag <span>· Meal Prep + Schicht</span></div><div class="day-kcal">~3200 kcal</div></div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-body">
+      <div class="meal-row"><div class="meal-time">9:00<br>Frühstück</div><div class="meal-name"><strong>Skyr-Bowl deluxe</strong><span class="meal-desc">500g Skyr + 80g Haferflocken + Banane + Datteln + Walnüsse + Honig</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">12:00<br>Mittag</div><div class="meal-name"><strong>Meal-Prep verkosten</strong><span class="meal-desc">Eine frisch gekochte Portion vom Meal Prep direkt essen</span></div><div class="meal-kcal">800</div></div>
+      <div class="meal-row"><div class="meal-time">15:00<br>Snack</div><div class="meal-name"><strong>Brot + Thunfisch</strong><span class="meal-desc">2 Scheiben Brot + 1 Dose Thunfisch + Olivenöl + Zitrone + Tomate</span></div><div class="meal-kcal">500</div></div>
+      <div class="meal-row"><div class="meal-time">18:00<br>Schicht-Box</div><div class="meal-name"><strong>Pasta-Box</strong><span class="meal-desc">Hähnchen-Pasta in Box mitnehmen</span></div><div class="meal-kcal">700</div></div>
+      <div class="meal-row"><div class="meal-time">22:00<br>Snack</div><div class="meal-name"><strong>Whey + Banane</strong><span class="meal-desc">30g Whey + 1 Banane + Erdnussbutter</span></div><div class="meal-kcal">400</div></div>
     </div>
   </div>
 </section>
-
+ 
+<section class="section fade-in">
+  <div class="section-head">
+    <div class="section-icon">🍱</div>
+    <div><div class="section-title">Meal <span>Prep</span></div><div class="section-desc">Was du sonntags vorkochst – Zeit gespart unter der Woche</div></div>
+  </div>
+ 
+  <div class="alert alert-info"><strong>Sonntag-Routine (~90 Min):</strong> Reis kochen → Hähnchen anbraten → Hack-Pfanne machen → Overnight Oats vorbereiten → in Boxen portionieren → Kühlschrank.</div>
+ 
+  <div class="grid-2">
+ 
+    <div class="prep-card">
+      <div class="prep-title"><span class="prep-icon">🍗</span> Hähnchen-Reis-Bowl</div>
+      <div class="prep-meta"><span class="chip chip-lime">5 Portionen</span><span class="chip">~3 Tage haltbar</span><span class="chip">35 Min</span></div>
+      <ul class="prep-list">
+        <li><strong>Zutaten:</strong> 1 kg Hähnchen, 500g Reis, 2 Zwiebeln, Knoblauch, Tomaten, Gewürze (Kurkuma, Paprika, Salz, Pfeffer)</li>
+        <li><strong>Schritt 1:</strong> Reis nach persischer Art kochen (mit Salz, Olivenöl)</li>
+        <li><strong>Schritt 2:</strong> Hähnchen würfeln, mit Zwiebel + Knoblauch anbraten, Gewürze rein, kurz weiter braten</li>
+        <li><strong>Schritt 3:</strong> Tomaten dazu, 5 Min köcheln</li>
+        <li><strong>Verpacken:</strong> 5 Boxen à ~200g Reis + 200g Hähnchen-Mix</li>
+        <li><strong>Tipp:</strong> Frisches Gemüse separat (Salat, Tomaten) erst beim Essen dazu – bleibt knackig</li>
+      </ul>
+    </div>
+ 
+    <div class="prep-card">
+      <div class="prep-title"><span class="prep-icon">🥩</span> Hack-Bulgur-Pfanne</div>
+      <div class="prep-meta"><span class="chip chip-lime">4 Portionen</span><span class="chip">~3 Tage haltbar</span><span class="chip">25 Min</span></div>
+      <ul class="prep-list">
+        <li><strong>Zutaten:</strong> 800g Hack, 300g Bulgur, 2 Zwiebeln, Knoblauch, Tomatenmark, Paprikapulver, Kreuzkümmel</li>
+        <li><strong>Schritt 1:</strong> Bulgur in heißem Wasser quellen lassen (15 Min)</li>
+        <li><strong>Schritt 2:</strong> Hack mit Zwiebel + Knoblauch krümelig braten, Gewürze + Tomatenmark rein</li>
+        <li><strong>Schritt 3:</strong> Bulgur unterheben, 5 Min ziehen lassen</li>
+        <li><strong>Verpacken:</strong> 4 Boxen, abkühlen lassen vor dem Verschließen</li>
+        <li><strong>Dazu:</strong> Joghurt-Knoblauch-Sauce extra → bringt Frische</li>
+      </ul>
+    </div>
+ 
+    <div class="prep-card">
+      <div class="prep-title"><span class="prep-icon">🥣</span> Overnight Oats (3-Tage-Vorrat)</div>
+      <div class="prep-meta"><span class="chip chip-lime">3 Gläser</span><span class="chip">3 Tage Kühlschrank</span><span class="chip">10 Min</span></div>
+      <ul class="prep-list">
+        <li><strong>Pro Glas:</strong> 100g Haferflocken + 250ml Hafermilch + 1 EL Honig + Prise Salz</li>
+        <li><strong>Topping (am Morgen frisch):</strong> Banane, Walnüsse, Datteln, Erdnussbutter</li>
+        <li><strong>Trick:</strong> 3 verschiedene Toppings = 3 verschiedene Frühstücke</li>
+        <li><strong>Glas 1:</strong> Banane + Erdnussbutter</li>
+        <li><strong>Glas 2:</strong> Beeren + Walnüsse + Honig</li>
+        <li><strong>Glas 3:</strong> Datteln + Mandeln + Skyr-Topping</li>
+      </ul>
+    </div>
+ 
+    <div class="prep-card">
+      <div class="prep-title"><span class="prep-icon">🍝</span> Hähnchen-Pasta</div>
+      <div class="prep-meta"><span class="chip chip-lime">3 Portionen</span><span class="chip">~3 Tage haltbar</span><span class="chip">25 Min</span></div>
+      <ul class="prep-list">
+        <li><strong>Zutaten:</strong> 600g Hähnchen, 500g Pasta, Tomaten, Knoblauch, Olivenöl, Basilikum/getr. Kräuter</li>
+        <li><strong>Schritt 1:</strong> Pasta al dente kochen (eher etwas fester – wird beim Aufwärmen weicher)</li>
+        <li><strong>Schritt 2:</strong> Hähnchen würfeln, mit Knoblauch + Olivenöl braten, Tomaten dazu</li>
+        <li><strong>Schritt 3:</strong> Pasta + Sauce mischen, in 3 Boxen verteilen</li>
+      </ul>
+    </div>
+ 
+    <div class="prep-card">
+      <div class="prep-title"><span class="prep-icon">🥗</span> Persische Salat-Box</div>
+      <div class="prep-meta"><span class="chip chip-lime">5 kleine Boxen</span><span class="chip">3 Tage haltbar</span><span class="chip">10 Min</span></div>
+      <ul class="prep-list">
+        <li><strong>Zutaten:</strong> Tomaten, Gurke, Zwiebel, Petersilie, Zitronensaft, Olivenöl, Sumach, Salz</li>
+        <li><strong>Trick:</strong> Alles würfeln, ABER Dressing erst beim Essen dazu (sonst wird Gemüse matschig)</li>
+        <li><strong>Dressing in kleinem Glas:</strong> Olivenöl + Zitrone + Sumach + Salz</li>
+        <li>Passt zu jeder Hauptmahlzeit – gibt Frische und Vitamine</li>
+      </ul>
+    </div>
+ 
+    <div class="prep-card">
+      <div class="prep-title"><span class="prep-icon">🍵</span> Hähnchen-Brühe (Bonus)</div>
+      <div class="prep-meta"><span class="chip chip-amber">optional</span><span class="chip">5 Tage</span><span class="chip">passiv 1 h</span></div>
+      <ul class="prep-list">
+        <li><strong>Wenn du Hähnchen mit Knochen kaufst:</strong> Knochen 1 h auskochen mit Zwiebel, Karotte, Knoblauch, Pfefferkörnern</li>
+        <li><strong>Verwendung:</strong> Reis darin kochen statt Wasser → mehr Geschmack, mehr Protein</li>
+        <li><strong>Aufbewahren:</strong> 2 Liter im Kühlschrank, Rest einfrieren in Eiswürfelformen</li>
+      </ul>
+    </div>
+ 
+  </div>
+</section>
+ 
 <section class="section fade-in">
   <div class="section-head">
     <div class="section-icon">💡</div>
     <div><div class="section-title">Strategie & <span>Tipps</span></div></div>
   </div>
   <div class="grid-2">
-    <div class="card" style="padding:16px 18px">
-      <div class="chip chip-lime" style="margin-bottom:10px">SONNTAG MEAL PREP</div>
-      <div style="font-size:13.5px;line-height:1.7;color:var(--muted)">4–5 Portionen Hähnchen + Reis vorkochen. Übernight Oats für Mo–Mi vorbereiten. Spart unter der Woche 60–90 Min.</div>
-    </div>
-    <div class="card" style="padding:16px 18px">
-      <div class="chip chip-lime" style="margin-bottom:10px">5–6 MAHLZEITEN</div>
-      <div style="font-size:13.5px;line-height:1.7;color:var(--muted)">Handy-Alarme stellen: 8:00, 11:00, 14:00, 17:00, 20:00. Als Hardgainer eher kleinere häufige Mahlzeiten.</div>
-    </div>
-    <div class="card" style="padding:16px 18px">
-      <div class="chip chip-amber" style="margin-bottom:10px">FORTSCHRITT?</div>
-      <div style="font-size:13.5px;line-height:1.7;color:var(--muted)">Wenn nach 3 Wochen kein Zuwachs: Kalorien um 200 kcal erhöhen. Ziel ~+0.3 kg pro Woche.</div>
-    </div>
-    <div class="card" style="padding:16px 18px">
-      <div class="chip chip-amber" style="margin-bottom:10px">PROTEIN</div>
-      <div style="font-size:13.5px;line-height:1.7;color:var(--muted)">Hähnchen, Lachs, Eier, Skyr, Linsen, Kichererbsen. Bei Bedarf Whey-Shake nach dem Training.</div>
-    </div>
+    <div class="card" style="padding:16px 18px"><div class="chip chip-lime" style="margin-bottom:10px">SONNTAG = PREP-TAG</div><div style="font-size:13.5px;line-height:1.7;color:var(--muted)">90 Min investieren spart unter der Woche 5+ Stunden. Mahlzeiten in Boxen → Kühlschrank → Zack warm machen.</div></div>
+    <div class="card" style="padding:16px 18px"><div class="chip chip-lime" style="margin-bottom:10px">5–6 MAHLZEITEN</div><div style="font-size:13.5px;line-height:1.7;color:var(--muted)">Handy-Alarme stellen: 8:00, 11:00, 14:00, 17:00, 20:00. Als Hardgainer eher kleinere häufige Mahlzeiten.</div></div>
+    <div class="card" style="padding:16px 18px"><div class="chip chip-amber" style="margin-bottom:10px">FORTSCHRITT?</div><div style="font-size:13.5px;line-height:1.7;color:var(--muted)">Wenn nach 3 Wochen kein Zuwachs: Kalorien um 200 kcal erhöhen. Ziel ~+0.3 kg pro Woche.</div></div>
+    <div class="card" style="padding:16px 18px"><div class="chip chip-amber" style="margin-bottom:10px">EINFRIEREN</div><div style="font-size:13.5px;line-height:1.7;color:var(--muted)">Hähnchen + Hack in 200–300g Beuteln einfrieren. Abends raus → morgens aufgetaut. Hält 3 Monate.</div></div>
   </div>
 </section>
-
+ 
 </div>
 </div>
-
+ 
 <script src="../js/shared.js"></script>
-<script>injectNav();injectFooter();initFadeIn();initTabs('.tab-bar','.tab-pane');</script>
+<script>
+injectNav();injectFooter();initFadeIn();
+// erstes Day-Card heute öffnen
+const today = new Date().getDay();
+const map = [6,0,1,2,3,4,5]; // So=6, Mo=0...
+const cards = document.querySelectorAll('.day-card');
+if(cards[map[today]]) cards[map[today]].classList.add('open');
+</script>
 </body>
 </html>
