@@ -69,9 +69,10 @@
       <span class="tk-lbl">Trainingseinheit</span>
       <select id="session" class="tk-input">
         <option value="">— keine —</option>
-        <option value="A">Einheit A · Push</option>
-        <option value="B">Einheit B · Beine</option>
-        <option value="C">Einheit C · Pull</option>
+        <option value="D">Einheit D · Arme + Schultern (Mo)</option>
+        <option value="A">Einheit A · Push (Mi)</option>
+        <option value="B">Einheit B · Beine (Fr)</option>
+        <option value="C">Einheit C · Pull (Sa)</option>
         <option value="M">Nur Mobility</option>
       </select>
     </div>
@@ -97,7 +98,9 @@
       <div class="tk-weight-grid"><div>Sitzrudern</div><input type="number" id="ex_sr" class="tk-input" placeholder="kg"><div></div></div>
       <div class="tk-weight-grid"><div>Hip Thrust</div><input type="number" id="ex_ht" class="tk-input" placeholder="kg"><div></div></div>
       <div class="tk-weight-grid"><div>Beinbeuger</div><input type="number" id="ex_bb" class="tk-input" placeholder="kg"><div></div></div>
-      <div class="tk-weight-grid"><div>Beinstrecker</div><input type="number" id="ex_bs" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Bizepscurls</div><input type="number" id="ex_bc" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Trizeps Pushdown</div><input type="number" id="ex_tp" class="tk-input" placeholder="kg"><div></div></div>
+      <div class="tk-weight-grid"><div>Seitheben</div><input type="number" id="ex_sh" class="tk-input" placeholder="kg"><div></div></div>
     </div>
 
     <div class="tk-field" style="grid-column:1/-1;">
@@ -125,6 +128,8 @@ injectNav();injectFooter();initFadeIn();
 document.getElementById('datePicker').value = getTodayKey();
 loadDate();
 
+const EX_KEYS = ['bp','sb','sd','lz','sr','ht','bb','bc','tp','sh'];
+
 function loadDate(){
   const d = document.getElementById('datePicker').value || getTodayKey();
   const e = getDayEntry(d);
@@ -139,7 +144,7 @@ function loadDate(){
   document.getElementById('cSleep').checked = !!e.cSleep;
   document.getElementById('cMeals').checked = !!e.cMeals;
   document.getElementById('notes').value = e.notes||'';
-  ['bp','sb','sd','lz','sr','ht','bb','bs'].forEach(k=>{
+  EX_KEYS.forEach(k=>{
     document.getElementById('ex_'+k).value = (e.ex && e.ex[k])||'';
   });
 }
@@ -147,7 +152,7 @@ function loadDate(){
 function saveEntry(){
   const d = document.getElementById('datePicker').value || getTodayKey();
   const ex={};
-  ['bp','sb','sd','lz','sr','ht','bb','bs'].forEach(k=>{
+  EX_KEYS.forEach(k=>{
     const v = document.getElementById('ex_'+k).value;
     if(v) ex[k] = parseFloat(v);
   });
