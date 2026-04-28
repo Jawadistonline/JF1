@@ -33,7 +33,7 @@ const NAV_HTML = `
 
 const NAV_HTML_ROOT = `
 <nav>
-  <a class="nav-brand" href="index.html">JAWAD // PLAN</a>
+  <a class="nav-brand" href="index.html">JF1</a>
   <ul class="nav-links">
     <li><a href="index.html">Start</a></li>
     <li><a href="pages/woche.html">Wochenplan</a></li>
