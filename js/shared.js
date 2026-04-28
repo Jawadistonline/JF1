@@ -18,7 +18,7 @@ const MOON_SVG = `<svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" s
 // ── SHARED NAV ──
 const NAV_HTML = `
 <nav>
-  <a class="nav-brand" href="../index.html">JAWAD // PLAN</a>
+  <a class="nav-brand" href="../index.html">JF1</a>
   <ul class="nav-links">
     <li><a href="../index.html">Start</a></li>
     <li><a href="woche.html">Wochenplan</a></li>
